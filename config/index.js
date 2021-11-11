@@ -1,8 +1,38 @@
+const path = require('path')
+
+const VANT_BASE = 'src/components/vant-weapp/dist'
+const TARGET_BASE = 'dist/components/vant-weapp/dist'
+const vantComponents = [
+  'button',
+  'notify',
+  'icon',
+  'loading',
+  'transition',
+  'nav-bar',
+  'cell',
+  'field',
+  'tabs',
+  'sticky',
+  'empty',
+  'divider',
+  'popup',
+  'picker',
+  'picker-column',
+  'switch'
+]
+const copyList = [
+  'wxs',
+  'common/style',
+  'common/index.wxss',
+  ...vantComponents.map(component => `${component}/index.wxs`)
+]
+
 const config = {
   projectName: 'limited-partner',
   date: '2021-11-11',
-  designWidth: 750,
+  designWidth: 375,
   deviceRatio: {
+    375: 2 / 1,
     640: 2.34 / 2,
     750: 1,
     828: 1.81 / 2
@@ -14,17 +44,23 @@ const config = {
   },
   copy: {
     patterns: [
+      ...copyList.map(item => ({ from: `${VANT_BASE}/${item}`, to: `${TARGET_BASE}/${item}` }))
     ],
     options: {
     }
   },
   framework: 'react',
+  weapp: {
+    npm: {
+      dir: '../dist'
+    }
+  },
   mini: {
     postcss: {
       pxtransform: {
         enable: true,
         config: {
-
+          selectorBlackList: [/van-/]
         }
       },
       url: {
@@ -40,6 +76,15 @@ const config = {
           generateScopedName: '[name]__[local]___[hash:base64:5]'
         }
       }
+    },
+    webpackChain(chain) {
+      chain.module
+        .rule('script')
+        .use('linariaLoader')
+        .loader('linaria/loader')
+        .options({
+          sourceMap: process.env.NODE_ENV !== 'production',
+        })
     }
   },
   h5: {
@@ -59,12 +104,20 @@ const config = {
         }
       }
     }
+  },
+  alias: {
+    '@vant-weapp': path.resolve(__dirname, '../src/components/vant-weapp')
   }
 }
 
 module.exports = function (merge) {
-  if (process.env.NODE_ENV === 'development') {
-    return merge({}, config, require('./dev'))
+  const base = merge({}, config, require('../../../config/base'))
+  switch (process.env.NODE_ENV) {
+    case 'development':
+      return merge({}, base, require('./dev'))
+    case 'uat':
+      return merge({}, base, require('./uat'))
+    default:
+      return merge({}, base, require('./prod'))
   }
-  return merge({}, config, require('./prod'))
 }

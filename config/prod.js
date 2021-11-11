@@ -3,6 +3,9 @@ module.exports = {
     NODE_ENV: '"production"'
   },
   defineConstants: {
+    API_GATEWAY: '"https://www.hrvc.cc:9999"',
+    REAL_ENV: '"PROD"',
+    AGENT_CODE: '"找后端要"'
   },
   mini: {},
   h5: {

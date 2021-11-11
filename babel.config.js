@@ -5,6 +5,17 @@ module.exports = {
     ['taro', {
       framework: 'react',
       ts: true
-    }]
+    }],
+    'linaria/babel'
+  ],
+  plugins: [
+    [
+      'import',
+      {
+        libraryName: 'taro-hooks',
+        camel2DashComponentName: false
+      },
+      'taro-hooks'
+    ]
   ]
 }

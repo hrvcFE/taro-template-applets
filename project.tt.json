@@ -1,6 +1,6 @@
 {
   "miniprogramRoot": "./",
-  "projectname": "limited-partner",
+  "projectname": "ww-applets/<%= projectName %>",
   "appid": "touristappid",
   "setting": {
     "es6": false,
