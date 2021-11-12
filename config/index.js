@@ -112,7 +112,7 @@ const config = {
 
 module.exports = function (merge) {
   const base = merge({}, config, require('../../../config/base'))
-  switch (process.env.NODE_ENV) {
+  switch (process.env.APP_ENV) {
     case 'development':
       return merge({}, base, require('./dev'))
     case 'uat':
